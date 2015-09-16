@@ -5,10 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+    <style>
+        .container {
+            padding-top: 50px;
+        }
+        .no-album {
+            width: 300px;
+            height: 300px;
+        }
+    </style>
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </head>
 <body>
 <div class="container">
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed"
+                        data-target="#navbar-collapse"
+                        data-toggle="collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">New Albums</a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="navbar-collapse">
+                <ul class="nav navbar-nav">
+                    {% for y in years %}
+                        <li{% if y == year %} class="active"{% endif %}>
+                            <a href="{% url 'main_page' %}?year={{ y }}">{{ y }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </nav>
     {% for artist in artists %}
         <div>
             <h3>
@@ -21,7 +56,7 @@
             </h3>
             <div class="row">
                 {% for album in artist.albums.all %}
-                    <div class="col-md-4"{% if forloop.counter > 3 %} style="display: none;"{% endif %}>
+                    <div class="col-md-4"{% if forloop.counter > 3 %} style="display:none"{% endif %}>
                         <h4>
                             {{ album }}
                             <span class="label label-success">{{ album.year }}</span>
@@ -30,7 +65,7 @@
                         {% if album.image %}
                             <img {% if forloop.counter > 3 %} data-src="{{ album.image }}" {% else %} src="{{ album.image }}" {% endif %} width="300" height="300">
                         {% else %}
-                            <div style="width: 300px; height: 300px;"></div>
+                            <div class="no-album"></div>
                         {% endif %}
                     </div>
                 {% endfor %}
@@ -43,7 +78,7 @@
             {% for page in page_obj.page_range %}
                 {% if page %}
                     <li{% if page_obj.number == page %} class="active"{% endif %}>
-                        <a href="{% url 'main_page' %}?page={{ page }}">{{ page }}</a>
+                        <a href="{% url 'main_page' %}?page={{ page }}&year={{ year }}">{{ page }}</a>
                     </li>
                 {% else %}
                     <li class="disabled"><span>...</span></li>

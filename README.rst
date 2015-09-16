@@ -18,6 +18,7 @@ Then change settings in project/local_settings.py
     . venv/bin/activate
     pip install -Ur requirements.txt
     ./manage.py migrate
+    ./manage.py createsuperuser
 
 Loading/updating artists and releases
 =====================================
