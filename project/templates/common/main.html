@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>New Albums</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    {% for artist in artists %}
+        <div>
+            <h3>
+                {{ artist }}
+                <small>
+                    <a href="/a/common/artist/{{ artist.id }}">Edit</a>
+                    |
+                    <a target="_blank" href="http://musicbrainz.org/artist/{{ artist.mbid }}">MusicBrainz</a>
+                </small>
+            </h3>
+            <div class="row">
+                {% for album in artist.albums.all %}
+                    <div class="col-md-4"{% if forloop.counter > 3 %} style="display: none;"{% endif %}>
+                        <h4>
+                            {{ album }}
+                            <span class="label label-success">{{ album.year }}</span>
+                            <small class="text-uppercase">{{ album.type }}</small>
+                        </h4>
+                        {% if album.image %}
+                            <img {% if forloop.counter > 3 %} data-src="{{ album.image }}" {% else %} src="{{ album.image }}" {% endif %} width="300" height="300">
+                        {% else %}
+                            <div style="width: 300px; height: 300px;"></div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+
+    <nav>
+        <ul class="pagination">
+            {% for page in page_obj.page_range %}
+                {% if page %}
+                    <li{% if page_obj.number == page %} class="active"{% endif %}>
+                        <a href="{% url 'main_page' %}?page={{ page }}">{{ page }}</a>
+                    </li>
+                {% else %}
+                    <li class="disabled"><span>...</span></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </nav>
+</div>
+</body>
+</html>

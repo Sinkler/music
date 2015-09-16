@@ -1,0 +1,5 @@
+. venv/bin/activate
+./manage.py artists
+./manage.py releases
+./manage.py albums
+./manage.py covers
