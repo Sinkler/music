@@ -12,7 +12,7 @@ class MainPage(ListView):
 
     def get_queryset(self):
         artists = Artist.objects
-        year = int(self.request.GET.get('year', 0))
+        year = self.request.GET.get('year', 0)
         if year:
             artists = artists.filter(max_year=year)
         return artists.order_by('-max_year', '-lastfm_playcount')
@@ -25,8 +25,9 @@ class MainPage(ListView):
     def get_context_data(self, **kwargs):
         context = super(MainPage, self).get_context_data(**kwargs)
         y = localtime(now()).year
+        g = self.request.GET.get('year')
         context.update({
             'years': range(y, y - 5, -1),
-            'year': int(self.request.GET.get('year'))
+            'year': int(g) if g else 0
         })
         return context
