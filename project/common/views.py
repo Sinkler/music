@@ -12,7 +12,7 @@ class MainPage(ListView):
 
     def get_queryset(self):
         artists = Artist.objects
-        year = self.request.GET.get('year', 0)
+        year = int(self.request.GET.get('year', 0))
         if year:
             artists = artists.filter(max_year=year)
         return artists.order_by('-max_year', '-lastfm_playcount')
