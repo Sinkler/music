@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+from django.utils.timezone import now
 from common.models import Artist, Release, Album
 
 
@@ -11,6 +12,7 @@ class Command(BaseCommand):
                 if created:
                     print 'new: ', release.title, release.year
                     album.year = release.year
+                    artist.updated = now()
                 else:
                     if release.year:
                         album.year = release.year if not album.year else min(release.year, album.year)

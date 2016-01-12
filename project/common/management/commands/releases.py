@@ -24,13 +24,14 @@ class Command(BaseCommand):
             artists = Artist.objects.filter(lastfm_playcount__gt=settings.LASTFM_MIN_PLAY_COUNT, mbid__gt='')
         for artist in artists:
             print artist.title
-            # deleting old releases and albums
-            artist.max_year = 0
-            for old_release in artist.releases.all():
-                old_release.delete()
-            for old_album in artist.albums.all():
-                old_album.delete()
-            artist.save()
+            if options['changed']:
+                # deleting old releases and albums
+                artist.max_year = 0
+                for old_release in artist.releases.all():
+                    old_release.delete()
+                for old_album in artist.albums.all():
+                    old_album.delete()
+                artist.save()
             # getting new releases
             for release_type in settings.MB_RELEASE_TYPES:
                 limit = 100

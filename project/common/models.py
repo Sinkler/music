@@ -3,6 +3,7 @@ from django.db import models
 
 class Artist(models.Model):
     created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField()
     lastfm_mbid = models.CharField(default='', max_length=255)
     lastfm_playcount = models.PositiveIntegerField(default=0)
     mbid = models.CharField(default='', max_length=255)

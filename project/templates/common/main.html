@@ -74,19 +74,21 @@
         </div>
     {% endfor %}
 
-    <nav>
-        <ul class="pagination">
-            {% for page in page_obj.page_range %}
-                {% if page %}
-                    <li{% if page_obj.number == page %} class="active"{% endif %}>
-                        <a href="{% url 'main_page' %}?page={{ page }}&year={{ year }}">{{ page }}</a>
-                    </li>
-                {% else %}
-                    <li class="disabled"><span>...</span></li>
-                {% endif %}
-            {% endfor %}
-        </ul>
-    </nav>
+    {% if page_obj.page_range|length > 1 %}
+        <nav>
+            <ul class="pagination">
+                {% for page in page_obj.page_range %}
+                    {% if page %}
+                        <li{% if page_obj.number == page %} class="active"{% endif %}>
+                            <a href="{% url 'main_page' %}?page={{ page }}&year={{ year }}">{{ page }}</a>
+                        </li>
+                    {% else %}
+                        <li class="disabled"><span>...</span></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </nav>
+    {% endif %}
 </div>
 </body>
 </html>

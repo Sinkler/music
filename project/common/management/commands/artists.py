@@ -1,6 +1,7 @@
 from lastfmclient import LastfmClient
 from django.conf import settings
 from django.core.management.base import BaseCommand
+from django.utils.timezone import now
 from common.models import Artist
 
 
@@ -14,10 +15,12 @@ class Command(BaseCommand):
             cont = int(request['@attr']['page']) < int(request['@attr']['totalPages'])
             page += 1
             for p in request['artist']:
-                artist, created = Artist.objects.get_or_create(lastfm_mbid=p.get('mbid'), title=p.get('name'))
+                artist, created = Artist.objects.get_or_create(lastfm_mbid=p.get('mbid'), title=p.get('name'),
+                                                               defaults={'updated': now()})
                 if created:
                     artist.mbid = p.get('mbid')
                     print 'new: ', p.get('mbid'), p.get('name')
                 artist.lastfm_playcount = p.get('playcount')
+                artist.updated = now()
                 artist.save()
         print 'artists - ok'
