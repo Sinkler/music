@@ -4,7 +4,7 @@ from common.models import Artist, Release, Album
 
 class AlbumAdminInline(admin.TabularInline):
     model = Album
-    fields = ('title', 'type', 'year', '_edit')
+    fields = ('title', 'type', 'year', '_edit',)
     readonly_fields = ('type', '_edit',)
     extra = 0
 
@@ -17,11 +17,27 @@ class AlbumAdminInline(admin.TabularInline):
     _edit.__name__ = ''
 
 
+class ReleaseAdminInline(admin.TabularInline):
+    model = Release
+    fields = ('title', 'date', 'year', 'country', '_edit',)
+    readonly_fields = ('_edit',)
+    extra = 0
+
+    def has_add_permission(self, request):
+        return False
+
+    def _edit(self, obj):
+        return '<a href="/a/common/release/{id}/">Edit</a>'.format(id=obj.id) if obj.id else ''
+    _edit.allow_tags = True
+    _edit.__name__ = ''
+
+
 class ArtistAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'lastfm_playcount', 'max_year', 'mbid', 'created')
+    list_display = ('id', 'title', 'lastfm_playcount', 'max_year', 'mbid', 'created',)
     list_display_links = list_display
     search_fields = ('id', 'title', 'mbid',)
-    inlines = (AlbumAdminInline,)
+    inlines = (AlbumAdminInline, ReleaseAdminInline,)
+    save_on_top = True
 
 
 class ReleaseAdmin(admin.ModelAdmin):

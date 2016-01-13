@@ -3,6 +3,7 @@ from optparse import make_option
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.db.models import F
+from django.utils.timezone import now
 from common.models import Artist, Release
 
 
@@ -21,9 +22,14 @@ class Command(BaseCommand):
         if options['changed']:
             artists = Artist.objects.exclude(lastfm_mbid=F('mbid'))
         else:
-            artists = Artist.objects.filter(lastfm_playcount__gt=settings.LASTFM_MIN_PLAY_COUNT, mbid__gt='')
+            artists = Artist.objects\
+                .filter(lastfm_playcount__gt=settings.LASTFM_MIN_PLAY_COUNT, mbid__gt='')\
+                .order_by('lastfm_playcount')
         for artist in artists:
-            print artist.title
+            print 'ARTIST: ', artist.title
+            if artist.updated and not (now() - artist.updated).days:
+                print 'updated recently'
+                continue
             if options['changed']:
                 # deleting old releases and albums
                 artist.max_year = 0
@@ -48,7 +54,7 @@ class Command(BaseCommand):
                         parsed += 1
                         album, created = Release.objects.get_or_create(mbid=release.get('id'), artist=artist)
                         if created:
-                            print 'new: ', release.get('id'), release.get('title')
+                            print 'NEW: ', release.get('id'), release.get('title')
                             album.date = release.get('date')
                             if album.date:
                                 album.year = release.get('date').split('-')[0]
@@ -60,5 +66,6 @@ class Command(BaseCommand):
                         offset += limit
                     else:
                         cont = False
-            print '###'
-        print 'releases - ok'
+            artist.updated = now()
+            artist.save()
+        print 'FINISHED'

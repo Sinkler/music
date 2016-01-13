@@ -15,7 +15,7 @@ class MainPage(ListView):
         year = int(self.request.GET.get('year', 0))
         if year:
             artists = artists.filter(max_year=year)
-        return artists.order_by('-max_year', '-updated', '-lastfm_playcount')
+        return artists.order_by('-max_year', '-updated_albums', '-lastfm_playcount')
 
     def get_paginator(self, queryset, per_page, orphans=0, allow_empty_first_page=True, **kwargs):
         return DiggPaginator(queryset, per_page, orphans=orphans, allow_empty_first_page=allow_empty_first_page,

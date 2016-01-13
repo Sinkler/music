@@ -22,7 +22,7 @@ class Command(BaseCommand):
         else:
             albums = Album.objects.filter(is_get_image=False)
         for album in albums:
-            print album
+            print 'ALBUM: ', album
             for release in album.releases.all():
                 try:
                     data = musicbrainzngs.get_image_list(release.mbid)
@@ -40,4 +40,4 @@ class Command(BaseCommand):
                 print '-'
             album.is_get_image = True
             album.save()
-        print 'covers - ok'
+        print 'FINISHED'
